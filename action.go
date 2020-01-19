@@ -55,6 +55,7 @@ func (p *PlayPlayer) RiverAction(PotChip int64) (potChip int64, error error) {
 
 //PlayPerflopAction 玩家翻牌前的一轮操作
 func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+	//如果是第一轮次操作的大盲行为，他有权check
 	if p.BBCheckStatus == 0 && p.SiteNumber == 1 {
 		fmt.Println("你可以进行以下操作\n call\n raise\n fold\n allin\n check")
 		input := bufio.NewScanner(os.Stdin)
@@ -98,6 +99,12 @@ func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData)
 
 //Call 跟注
 func (p *PlayPlayData) Call(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+	p.ActionChip = PlayPlayer.ActionChip
+	p.Chip = p.Chip - p.ActionChip
+	potChip = p.ActionChip + PlayPlayer.ActionChip
+	//debug0119-------
+	fmt.Println(p.Chip)
+	//debug0119--------
 	return PotChip, nil
 }
 
