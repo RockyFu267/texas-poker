@@ -55,6 +55,28 @@ func (p *PlayPlayer) RiverAction(PotChip int64) (potChip int64, error error) {
 
 //PlayPerflopAction 玩家翻牌前的一轮操作
 func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+	if p.BBCheckStatus == 0 && p.SiteNumber == 1 {
+		fmt.Println("你可以进行以下操作\n call\n raise\n fold\n allin\n check")
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		switch input.Text() {
+		case "call":
+			p.Call(PotChip, PlayPlayer)
+		case "raise":
+			p.Raise(PotChip, PlayPlayer)
+		case "fold":
+			p.Fold(PotChip, PlayPlayer)
+		case "allin":
+			p.Allin(PotChip, PlayPlayer)
+		case "check":
+			p.Check(PotChip, PlayPlayer)
+		default:
+			fmt.Println("无效的指令，请重新输入：")
+			p.PlayPerflopAction(PotChip, PlayPlayer)
+		}
+		return PotChip, nil
+	}
+	fmt.Println("你可以进行以下操作\n call\n raise\n fold\n allin")
 	input := bufio.NewScanner(os.Stdin)
 	input.Scan()
 	switch input.Text() {
@@ -71,6 +93,7 @@ func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData)
 		p.PlayPerflopAction(PotChip, PlayPlayer)
 	}
 	return PotChip, nil
+
 }
 
 //Call 跟注
