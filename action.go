@@ -34,7 +34,7 @@ func (p *PlayPlayer) PerflopAction(PotChip int64) (potChip int64, error error) {
 		p[1].PlayPerflopAction(PotChip, p[0])
 	}
 	//debug0119------------------------
-	fmt.Println("场上选手剩余筹码：", p[0].Name, ":", p[0].Chip, "\t", p[1].Name, ":", p[1].Chip, "\t", "底池:", PotChip)
+	fmt.Println("场上选手剩余筹码：", p[0].Name, ":", p[0].Chip, "\t", p[1].Name, ":", p[1].Chip, "\t", "底池:", p[0].SumChip)
 	return PotChip, nil
 }
 
@@ -101,7 +101,8 @@ func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData)
 func (p *PlayPlayData) Call(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
 	p.ActionChip = PlayPlayer.ActionChip
 	p.Chip = p.Chip - p.ActionChip
-	potChip = p.ActionChip + PlayPlayer.ActionChip
+	p.SumChip = p.ActionChip + PlayPlayer.ActionChip
+
 	//debug0119-------
 	fmt.Println(p.Chip)
 	//debug0119--------
@@ -122,7 +123,11 @@ func (p *PlayPlayData) Allin(PotChip int64, PlayPlayer PlayPlayData) (potChip in
 func (p *PlayPlayData) Check(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
 	//wait 其他玩家行动
 	//next step
-
+	if p.BBCheckStatus == 0 && p.SiteNumber == 1 && p.ActionTurnNumber == 0 {
+		p.Chip = p.Chip - p.ActionChip
+		p.SumChip = p.ActionChip + PlayPlayer.ActionChip
+		return PotChip, nil
+	}
 	return PotChip, nil
 }
 

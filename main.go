@@ -50,6 +50,10 @@ type PlayPlayData struct {
 	NeedCallNumber int64 `json:"needcallnumber"`
 	//是否可以被跟注后过牌的状态码--在大盲位的时候特殊
 	BBCheckStatus int64 `json:"bbcheckstatus"`
+	//所在牌局的四个轮次
+	ActionTurnNumber int64 `json:"actionturnnumber"`
+	//桌面总筹码
+	SumChip int64 `json:"sumchip"`
 }
 
 func main() {
@@ -106,6 +110,8 @@ func main() {
 	//初始化被跟注后过牌的状态码
 	playPlayer[0].BBCheckStatus = 0
 	playPlayer[1].BBCheckStatus = 0
+	playPlayer[0].ActionTurnNumber = 0
+	playPlayer[1].ActionTurnNumber = 0
 	//var playPlayer = [2]string{PlayName, "AI"}
 	//fmt.Println("开始发牌")
 	StartGame(playPlayer, PotChip)
@@ -232,6 +238,10 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	//PotChip 归零
 	p[0].BBCheckStatus = 0
 	p[1].BBCheckStatus = 0
+	p[0].ActionTurnNumber = 0
+	p[1].ActionTurnNumber = 0
+	p[0].SumChip = 0
+	p[1].SumChip = 0
 	PotChip = 0
 	time.Sleep(1 * time.Second)
 	StartOneGame(p, PotChip, gameNumber)
