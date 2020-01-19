@@ -5,6 +5,26 @@ import (
 	"time"
 )
 
+//GetCard 获取自己的牌
+func (p *PlayPlayData) GetCard(New52CardList [52]Card) (error error) {
+	var number int64
+	number = 2
+	var hunCard [2]Card
+	//选手获取牌
+	hunCard[0] = New52CardList[p.SiteNumber]
+	hunCard[1] = New52CardList[p.SiteNumber+number]
+	p.HandsCard = hunCard
+	//选手5张公共牌提前注入
+	p.CardInfo.Value7[0] = New52CardList[p.SiteNumber]
+	p.CardInfo.Value7[1] = New52CardList[p.SiteNumber+number]
+	p.CardInfo.Value7[2] = New52CardList[2*number]
+	p.CardInfo.Value7[3] = New52CardList[2*number+1]
+	p.CardInfo.Value7[4] = New52CardList[2*number+2]
+	p.CardInfo.Value7[5] = New52CardList[2*number+3]
+	p.CardInfo.Value7[6] = New52CardList[2*number+4]
+	return nil
+}
+
 //ShuffleCard 洗牌
 func ShuffleCard() (New52CardList [52]Card) {
 	//初始化52张牌
