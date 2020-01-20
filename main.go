@@ -131,6 +131,11 @@ func StartGame(p PlayPlayer, PotChip int64) (error error) {
 	p[1].SiteNumber = 1
 	p[0].BBSBChip = 100
 	p[1].BBSBChip = 200
+	p[0].ActionChip = 100
+	p[1].ActionChip = 200
+	p[0].Chip = p[0].Chip - p[0].ActionChip
+	p[1].Chip = p[1].Chip - p[1].ActionChip
+	fmt.Println(p[0].Chip, p[1].Chip)
 	var play PlayPlayer
 	play[0] = p[0]
 	play[1] = p[1]
@@ -272,6 +277,9 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	p[1].SumChip = 0
 	p[0].AllinStatus = 0
 	p[1].AllinStatus = 0
+	//大盲动作不归0 初始化
+	p[0].ActionChip = 100
+	p[1].ActionChip = 200
 	PotChip = 0
 	time.Sleep(1 * time.Second)
 	StartOneGame(p, PotChip, gameNumber)
