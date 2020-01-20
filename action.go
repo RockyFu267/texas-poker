@@ -4,11 +4,13 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 )
 
 //PerflopAction 翻牌前操作
 func (p *PlayPlayer) PerflopAction(PotChip int64) (potChip int64, error error) {
+	fmt.Println("场上选手剩余筹码：", p[0].Name, ":", p[0].Chip, "\t", p[1].Name, ":", p[1].Chip, "\t", "底池:", p[0].SumChip)
 	//--debug
 	fmt.Println("小盲是：", p[0].Name)
 	fmt.Println("大盲是：", p[1].Name)
@@ -22,19 +24,21 @@ func (p *PlayPlayer) PerflopAction(PotChip int64) (potChip int64, error error) {
 	// PotChip = PotChip + p[0].BBSBChip
 	// //目前只写机器CALL-----
 	//debug0119------------------------
-	fmt.Println(p[0].ActionChip)
-	fmt.Println(p[1].ActionChip)
-	fmt.Println("----------------------------------")
 	p[0].ActionChip = 100
 	p[1].ActionChip = 200
+	//判断翻前操作次数
+	var number1 int64
 	for p[0].ActionChip != p[1].ActionChip {
+		number1 = number1 + 1
 		fmt.Println("zenmebana ")
 		time.Sleep(1 * time.Second)
-		p[0].PlayPerflopAction(PotChip, p[1])
-		p[1].PlayPerflopAction(PotChip, p[0])
+		p[0].PlayPerflopAction(number1, PotChip, p[1])
+		if number1 != 1 && p[0].ActionChip == p[1].ActionChip {
+			return PotChip, nil
+		}
+		p[1].PlayPerflopAction(number1, PotChip, p[0])
 	}
 	//debug0119------------------------
-	fmt.Println("场上选手剩余筹码：", p[0].Name, ":", p[0].Chip, "\t", p[1].Name, ":", p[1].Chip, "\t", "底池:", p[0].SumChip)
 	return PotChip, nil
 }
 
@@ -54,17 +58,33 @@ func (p *PlayPlayer) RiverAction(PotChip int64) (potChip int64, error error) {
 }
 
 //PlayPerflopAction 玩家翻牌前的一轮操作
-func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+func (p *PlayPlayData) PlayPerflopAction(number1 int64, PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
 	//如果是第一轮次操作的大盲行为，他有权check
-	if p.BBCheckStatus == 0 && p.SiteNumber == 1 {
-		fmt.Println("你可以进行以下操作\n call\n raise\n fold\n allin\n check")
+	// if p.BBCheckStatus == 0 && p.SiteNumber == 1 {
+	if number1 == 1 && p.SiteNumber == 1 {
+		if p.Chip < p.RaiseChipLeve {
+			fmt.Println("玩家：", p.Name, "-", "你可以进行以下操作\n fold\n allin")
+			input := bufio.NewScanner(os.Stdin)
+			input.Scan()
+			switch input.Text() {
+			case "fold":
+				p.Fold(PotChip, PlayPlayer)
+			case "allin":
+				p.Allin(PotChip, PlayPlayer)
+			case "check":
+				p.Check(PotChip, PlayPlayer)
+			default:
+				fmt.Println("无效的指令，请重新输入：")
+				p.PlayPerflopAction(number1, PotChip, PlayPlayer)
+			}
+			return PotChip, nil
+		}
+		fmt.Println("玩家：", p.Name, "-", "你可以进行以下操作\n raise\n fold\n allin\n check")
 		input := bufio.NewScanner(os.Stdin)
 		input.Scan()
 		switch input.Text() {
-		case "call":
-			p.Call(PotChip, PlayPlayer)
 		case "raise":
-			p.Raise(PotChip, PlayPlayer)
+			p.Raise(number1, PotChip, PlayPlayer)
 		case "fold":
 			p.Fold(PotChip, PlayPlayer)
 		case "allin":
@@ -73,25 +93,41 @@ func (p *PlayPlayData) PlayPerflopAction(PotChip int64, PlayPlayer PlayPlayData)
 			p.Check(PotChip, PlayPlayer)
 		default:
 			fmt.Println("无效的指令，请重新输入：")
-			p.PlayPerflopAction(PotChip, PlayPlayer)
+			p.PlayPerflopAction(number1, PotChip, PlayPlayer)
 		}
 		return PotChip, nil
 	}
-	fmt.Println("你可以进行以下操作\n call\n raise\n fold\n allin")
+	//如果筹码不够了
+	if p.Chip < p.RaiseChipLeve {
+		fmt.Println("玩家：", p.Name, "-", "你可以进行以下操作\n fold\n allin")
+		input := bufio.NewScanner(os.Stdin)
+		input.Scan()
+		switch input.Text() {
+		case "fold":
+			p.Fold(PotChip, PlayPlayer)
+		case "allin":
+			p.Allin(PotChip, PlayPlayer)
+		default:
+			fmt.Println("无效的指令，请重新输入：")
+			p.PlayPerflopAction(number1, PotChip, PlayPlayer)
+		}
+		return PotChip, nil
+	}
+	fmt.Println("玩家：", p.Name, "-", "你可以进行以下操作\n call\n raise\n fold\n allin")
 	input := bufio.NewScanner(os.Stdin)
 	input.Scan()
 	switch input.Text() {
 	case "call":
 		p.Call(PotChip, PlayPlayer)
 	case "raise":
-		p.Raise(PotChip, PlayPlayer)
+		p.Raise(number1, PotChip, PlayPlayer)
 	case "fold":
 		p.Fold(PotChip, PlayPlayer)
 	case "allin":
 		p.Allin(PotChip, PlayPlayer)
 	default:
 		fmt.Println("无效的指令，请重新输入：")
-		p.PlayPerflopAction(PotChip, PlayPlayer)
+		p.PlayPerflopAction(number1, PotChip, PlayPlayer)
 	}
 	return PotChip, nil
 
@@ -110,12 +146,40 @@ func (p *PlayPlayData) Call(PotChip int64, PlayPlayer PlayPlayData) (potChip int
 }
 
 //Raise 加注
-func (p *PlayPlayData) Raise(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+	fmt.Println("请输入要加注的金额：")
+	//获取输入
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
+	line := input.Text()
+	raiseNumber, err := strconv.ParseInt(line, 10, 64)
+	if err != nil {
+		fmt.Println("请认真输入金额，只有数字！！！")
+		p.Raise(number1, PotChip, PlayPlayer)
+	}
+	//得到最大能加注的值
+	canBeRaiseNumber := p.Chip - PlayPlayer.ActionChip
+	if raiseNumber > canBeRaiseNumber {
+		fmt.Println("最多只能加注：", canBeRaiseNumber)
+		p.Raise(number1, PotChip, PlayPlayer)
+	}
+	if raiseNumber < p.RaiseChipLeve {
+		fmt.Println("最小加注：", p.RaiseChipLeve)
+		p.Raise(number1, PotChip, PlayPlayer)
+	}
+	p.Chip = p.Chip - canBeRaiseNumber
+	if p.Chip == 0 {
+		p.AllinStatus = 1
+	}
+	p.ActionChip = p.ActionChip + raiseNumber
+	p.SumChip = p.ActionChip + PlayPlayer.ActionChip
+
 	return PotChip, nil
 }
 
 //Allin 全下 无条件可以看五张 最后开牌
 func (p *PlayPlayData) Allin(PotChip int64, PlayPlayer PlayPlayData) (potChip int64, error error) {
+
 	return PotChip, nil
 }
 

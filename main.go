@@ -54,6 +54,10 @@ type PlayPlayData struct {
 	ActionTurnNumber int64 `json:"actionturnnumber"`
 	//桌面总筹码
 	SumChip int64 `json:"sumchip"`
+	//Allin 状态
+	AllinStatus int64 `json:"allinstatus"`
+	//最低级别的加注单位
+	RaiseChipLeve int64 `json:"raisechipleve"`
 }
 
 func main() {
@@ -112,6 +116,10 @@ func main() {
 	playPlayer[1].BBCheckStatus = 0
 	playPlayer[0].ActionTurnNumber = 0
 	playPlayer[1].ActionTurnNumber = 0
+	playPlayer[0].AllinStatus = 0
+	playPlayer[1].AllinStatus = 0
+	playPlayer[0].RaiseChipLeve = 200
+	playPlayer[1].RaiseChipLeve = 200
 	//var playPlayer = [2]string{PlayName, "AI"}
 	//fmt.Println("开始发牌")
 	StartGame(playPlayer, PotChip)
@@ -134,6 +142,15 @@ func StartGame(p PlayPlayer, PotChip int64) (error error) {
 
 //StartOneGame 开始一局
 func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
+	//判断是否有结果了
+	if p[0].Chip == 0 {
+		fmt.Println("winner is:", p[1].Name)
+		return nil
+	}
+	if p[1].Chip == 0 {
+		fmt.Println("winner is:", p[0].Name)
+		return nil
+	}
 	gameNumber = gameNumber + 1
 	fmt.Println("------------------第", gameNumber, "局--------------------------------")
 	//洗牌-每一局开始必须操作
@@ -229,15 +246,6 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	// } else {
 	//  p[0].Chip = p[0].Chip + d
 	// }
-	//判断是否有结果了
-	if p[0].Chip == 0 {
-		fmt.Println("winner is:", p[1].Name)
-		return nil
-	}
-	if p[1].Chip == 0 {
-		fmt.Println("winner is:", p[0].Name)
-		return nil
-	}
 
 	//每局结束先换sitenumber 关系到发牌顺序
 	var tmpSiteNum int64
@@ -262,6 +270,8 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	p[1].ActionTurnNumber = 0
 	p[0].SumChip = 0
 	p[1].SumChip = 0
+	p[0].AllinStatus = 0
+	p[1].AllinStatus = 0
 	PotChip = 0
 	time.Sleep(1 * time.Second)
 	StartOneGame(p, PotChip, gameNumber)

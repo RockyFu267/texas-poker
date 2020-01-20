@@ -34,13 +34,13 @@ func (p *PlayPlayer) ShowHandSort(PotChip int64) (error error) {
 		//目前只有两个人所以
 		fmt.Println("两人分钱")
 		p[0].Chip = p[0].SumChip/2 + p[0].Chip
-		p[1].Chip = p[1].SumChip/2 + p[1].Chip
+		p[1].Chip = p[0].SumChip/2 + p[1].Chip
 	} else {
 		if MaxSSSList.PlayName == p[0].Name {
 			p[0].Chip = p[0].SumChip + p[0].Chip
 			fmt.Println("玩家：", p[0].Name, "获得胜利")
 		} else {
-			p[1].Chip = p[1].SumChip + p[1].Chip
+			p[1].Chip = p[0].SumChip + p[1].Chip
 			fmt.Println("玩家：", p[1].Name, "获得胜利")
 		}
 	}
