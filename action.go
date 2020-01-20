@@ -155,7 +155,10 @@ func (p *PlayPlayData) Call(PotChip int64, PlayPlayer PlayPlayData) (potChip int
 
 //Raise 加注
 func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayData) (potChip int64) {
-
+	var differenceNumber int64
+	var canBeRaiseNumber int64
+	differenceNumber = 0
+	canBeRaiseNumber = 0
 	fmt.Println("请输入要加注的金额：")
 	//获取输入
 	input := bufio.NewScanner(os.Stdin)
@@ -167,9 +170,9 @@ func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayDa
 		p.Raise(number1, PotChip, PlayPlayer)
 	}
 	//和对位的差价
-	differenceNumber := PlayPlayer.ActionChip - p.ActionChip
+	differenceNumber = PlayPlayer.ActionChip - p.ActionChip
 	//得到最大能加注的值
-	canBeRaiseNumber := p.Chip - differenceNumber
+	canBeRaiseNumber = p.Chip - differenceNumber
 	if raiseNumber > canBeRaiseNumber {
 		fmt.Println("最多只能加注：", canBeRaiseNumber)
 		p.Raise(number1, PotChip, PlayPlayer)
@@ -178,6 +181,7 @@ func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayDa
 		fmt.Println("最小加注：", p.RaiseChipLeve)
 		p.Raise(number1, PotChip, PlayPlayer)
 	}
+
 	p.Chip = p.Chip - raiseNumber - differenceNumber
 	if p.Chip == 0 {
 		p.AllinStatus = 1
