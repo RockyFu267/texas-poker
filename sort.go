@@ -84,12 +84,16 @@ func SortCardMaxListEND(CardRankSlice []CardRank) (CardMaxList CardRank, GetMone
 						CardMaxList = CardRankSlice[i]
 						break
 					} else {
-						if j == 4 {
-							if CardMaxList.Value[j].Rank == CardRankSlice[i].Value[j].Rank {
-								GetMoneyList = append(GetMoneyList, CardMaxList)
-								CardMaxList = CardRankSlice[i]
-								GetMoneyList = append(GetMoneyList, CardMaxList)
-								break
+						if CardMaxList.Value[j].Rank > CardRankSlice[i].Value[j].Rank {
+							break
+						} else {
+							if j == 4 {
+								if CardMaxList.Value[j].Rank == CardRankSlice[i].Value[j].Rank {
+									GetMoneyList = append(GetMoneyList, CardMaxList)
+									CardMaxList = CardRankSlice[i]
+									GetMoneyList = append(GetMoneyList, CardMaxList)
+									break
+								}
 							}
 						}
 					}

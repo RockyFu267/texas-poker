@@ -138,6 +138,26 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	fmt.Println("------------------第", gameNumber, "局--------------------------------")
 	//洗牌-每一局开始必须操作
 	new52 := ShuffleCard()
+	// //debug-指定特殊牌型
+	// new52[0].Suit = "红桃"
+	// new52[0].Rank = 3
+	// new52[1].Suit = "梅花"
+	// new52[1].Rank = 10
+	// new52[2].Suit = "黑桃"
+	// new52[2].Rank = 11
+	// new52[3].Suit = "梅花"
+	// new52[3].Rank = 2
+	// new52[4].Suit = "梅花"
+	// new52[4].Rank = 13
+	// new52[5].Suit = "黑桃"
+	// new52[5].Rank = 14
+	// new52[6].Suit = "梅花"
+	// new52[6].Rank = 12
+	// new52[7].Suit = "梅花"
+	// new52[7].Rank = 8
+	// new52[8].Suit = "方片"
+	// new52[8].Rank = 5
+	// //debug指定特殊牌型
 	//--debug
 	//fmt.Println(new52)
 	//--
