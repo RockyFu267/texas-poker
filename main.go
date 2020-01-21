@@ -192,9 +192,6 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	//fmt.Println(p[0].Name, p[0].CardInfo.Value7[0].CardTranslate(), p[0].CardInfo.Value7[1].CardTranslate(), p[0].CardInfo.Value7[2].CardTranslate(), p[0].CardInfo.Value7[3].CardTranslate(), p[0].CardInfo.Value7[4].CardTranslate(), p[0].CardInfo.Value7[5].CardTranslate(), p[0].CardInfo.Value7[6].CardTranslate())
 	//fmt.Println(p[1].Name, p[1].CardInfo.Value7[0].CardTranslate(), p[1].CardInfo.Value7[1].CardTranslate(), p[1].CardInfo.Value7[2].CardTranslate(), p[1].CardInfo.Value7[3].CardTranslate(), p[1].CardInfo.Value7[4].CardTranslate(), p[1].CardInfo.Value7[5].CardTranslate(), p[1].CardInfo.Value7[6].CardTranslate())
 	//--
-	// fmt.Println(p[0].SiteNumber)
-	// fmt.Println(p[1].SiteNumber)
-	//----
 	//翻前操作
 	//目前只写机器CALL
 
@@ -223,34 +220,8 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	}
 	fmt.Println("River:", new52[8].CardTranslate())
 
-	//作弊
-	// if p[1].Name == "AI" {
-	//  var Card2 = [2]Card{
-	//      {Suit: "黑桃", Rank: 14},
-	//      {Suit: "黑桃", Rank: 13},
-	//  }
-	//  p[1].HandsCard = Card2
-	//  p[1].CardInfo.Value7[0] = Card{Suit: "黑桃", Rank: 14}
-	//  p[1].CardInfo.Value7[1] = Card{Suit: "黑桃", Rank: 13}
-	// }
-	// if p[0].Name == "AI" {
-	//  var Card2 = [2]Card{
-	//      {Suit: "黑桃", Rank: 14},
-	//      {Suit: "黑桃", Rank: 13},
-	//  }
-	//  p[0].HandsCard = Card2
-	//  p[0].CardInfo.Value7[0] = Card{Suit: "黑桃", Rank: 14}
-	//  p[0].CardInfo.Value7[1] = Card{Suit: "黑桃", Rank: 13}
-	// }
-
 	//showhand 比大小
 	p.ShowHandSort(d)
-	// //假设每次AI赢
-	// if p[1].Name == "AI" {
-	//  p[1].Chip = p[1].Chip + d
-	// } else {
-	//  p[0].Chip = p[0].Chip + d
-	// }
 
 	//每局结束先换sitenumber 关系到发牌顺序
 	var tmpSiteNum int64

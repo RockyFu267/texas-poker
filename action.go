@@ -14,15 +14,6 @@ func (p *PlayPlayer) PerflopAction(PotChip int64) (potChip int64, error error) {
 	//--debug
 	fmt.Println("小盲是：", p[0].Name)
 	fmt.Println("大盲是：", p[1].Name)
-	//--debug
-	// //目前只写机器CALL-----
-	// p[0].Chip = p[0].Chip - p[0].BBSBChip
-	// p[1].Chip = p[1].Chip - p[1].BBSBChip
-	// PotChip = p[0].BBSBChip + p[1].BBSBChip
-	// //justcall
-	// p[0].Chip = p[0].Chip - p[0].BBSBChip
-	// PotChip = PotChip + p[0].BBSBChip
-	// //目前只写机器CALL-----
 	//debug0119------------------------
 	//判断翻前操作次数
 	var number1 int64
@@ -60,6 +51,7 @@ func (p *PlayPlayData) PlayPerflopAction(number1 int64, PotChip int64, PlayPlaye
 	//如果是第一轮次操作的大盲行为，他有权check
 	// if p.BBCheckStatus == 0 && p.SiteNumber == 1 {
 	if number1 == 1 && p.SiteNumber == 1 && p.ActionChip == PlayPlayer.ActionChip {
+		//如果筹码不够了
 		if p.Chip < p.RaiseChipLeve {
 			fmt.Println("玩家：", p.Name, "-", "你可以进行以下操作\n fold\n allin")
 			input := bufio.NewScanner(os.Stdin)
