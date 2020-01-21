@@ -123,19 +123,11 @@ func main() {
 	//var playPlayer = [2]string{PlayName, "AI"}
 	//fmt.Println("开始发牌")
 	StartGame(playPlayer, PotChip)
+	return
 }
 
 //StartGame 牌局开始 直到最后的出现唯一的胜利者 结束牌局--1v1的前提下
 func StartGame(p PlayPlayer, PotChip int64) (error error) {
-	p[0].SiteNumber = 0
-	p[1].SiteNumber = 1
-	p[0].BBSBChip = 100
-	p[1].BBSBChip = 200
-	p[0].ActionChip = 100
-	p[1].ActionChip = 200
-	p[0].Chip = p[0].Chip - p[0].ActionChip
-	p[1].Chip = p[1].Chip - p[1].ActionChip
-	fmt.Println(p[0].Chip, p[1].Chip)
 	var play PlayPlayer
 	play[0] = p[0]
 	play[1] = p[1]
@@ -156,6 +148,18 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 		fmt.Println("winner is:", p[0].Name)
 		return nil
 	}
+
+	p[0].SiteNumber = 0
+	p[1].SiteNumber = 1
+	p[0].BBSBChip = 100
+	p[1].BBSBChip = 200
+	p[0].ActionChip = 100
+	p[1].ActionChip = 200
+	p[0].Chip = p[0].Chip - p[0].ActionChip
+	p[1].Chip = p[1].Chip - p[1].ActionChip
+	PotChip = p[0].ActionChip + p[1].ActionChip
+	fmt.Println(p[0].Chip, p[1].Chip)
+
 	gameNumber = gameNumber + 1
 	fmt.Println("------------------第", gameNumber, "局--------------------------------")
 	//洗牌-每一局开始必须操作
@@ -194,34 +198,39 @@ func StartOneGame(p PlayPlayer, PotChip int64, gameNumber int64) (error error) {
 	//--
 	//翻前操作
 	//目前只写机器CALL
+	//debug0121
+	fmt.Println(PotChip, "------------------------------------")
+	//debug0121
+	PotChip = p.PerflopAction(PotChip)
 
-	a, err := p.PerflopAction(PotChip)
-	if err != nil {
-		return err
-	}
-	//flop三张
-	fmt.Println("Flop:", new52[4].CardTranslate(), new52[5].CardTranslate(), new52[6].CardTranslate())
-	//flop操作
-	b, err := p.FlopAction(a)
-	if err != nil {
-		return err
-	}
-	//trun操作
-	c, err := p.TurnAction(b)
-	if err != nil {
-		return err
-	}
-	//turn发一张
-	fmt.Println("Turn:", new52[7].CardTranslate())
-	//river操作
-	d, err := p.RiverAction(c)
-	if err != nil {
-		return err
-	}
-	fmt.Println("River:", new52[8].CardTranslate())
+	// //flop三张
+	// fmt.Println("Flop:", new52[4].CardTranslate(), new52[5].CardTranslate(), new52[6].CardTranslate())
+	// //flop操作
+	// b, err := p.FlopAction(a)
+	// if err != nil {
+	// 	return err
+	// }
+	// //trun操作
+	// c, err := p.TurnAction(b)
+	// if err != nil {
+	// 	return err
+	// }
+	// //turn发一张
+	// fmt.Println("Turn:", new52[7].CardTranslate())
+	// //river操作
+	// d, err := p.RiverAction(c)
+	// if err != nil {
+	// 	return err
+	// }
+	// fmt.Println("River:", new52[8].CardTranslate())
 
-	//showhand 比大小
-	p.ShowHandSort(d)
+	// //showhand 比大小
+	//debug0121---
+	fmt.Println(PotChip)
+	fmt.Println(p[0].Name, p[0].Chip)
+	fmt.Println(p[1].Name, p[1].Chip)
+	//debug0121---
+	p.ShowHandSort(PotChip)
 
 	//每局结束先换sitenumber 关系到发牌顺序
 	var tmpSiteNum int64

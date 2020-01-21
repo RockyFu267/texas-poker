@@ -39,9 +39,13 @@ func (p *PlayPlayer) ShowHandSort(PotChip int64) (error error) {
 		if MaxSSSList.PlayName == p[0].Name {
 			p[0].Chip = PotChip + p[0].Chip
 			fmt.Println("玩家：", p[0].Name, "获得胜利")
+			fmt.Println("玩家：", p[0].Name, p[0].Chip)
+			fmt.Println("玩家：", p[1].Name, p[1].Chip)
 		} else {
 			p[1].Chip = PotChip + p[1].Chip
 			fmt.Println("玩家：", p[1].Name, "获得胜利")
+			fmt.Println("玩家：", p[0].Name, p[0].Chip)
+			fmt.Println("玩家：", p[1].Name, p[1].Chip)
 		}
 	}
 	return nil
