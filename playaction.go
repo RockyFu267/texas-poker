@@ -45,7 +45,7 @@ func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayDa
 	raiseNumber, err := strconv.ParseInt(line, 10, 64)
 	if err != nil {
 		fmt.Println("请认真输入金额，只有数字！！！")
-		p.Raise(number1, PotChip, PlayPlayer)
+		PotChip = p.Raise(number1, PotChip, PlayPlayer)
 		return PotChip
 	}
 	//和对位的差价
@@ -54,12 +54,12 @@ func (p *PlayPlayData) Raise(number1 int64, PotChip int64, PlayPlayer PlayPlayDa
 	canBeRaiseNumber = p.Chip - differenceNumber
 	if raiseNumber > canBeRaiseNumber {
 		fmt.Println("最多只能加注：", canBeRaiseNumber)
-		p.Raise(number1, PotChip, PlayPlayer)
+		PotChip = p.Raise(number1, PotChip, PlayPlayer)
 		return PotChip
 	}
 	if raiseNumber < p.RaiseChipLeve {
 		fmt.Println("最小加注：", p.RaiseChipLeve)
-		p.Raise(number1, PotChip, PlayPlayer)
+		PotChip = p.Raise(number1, PotChip, PlayPlayer)
 		return PotChip
 	}
 	//debug0121

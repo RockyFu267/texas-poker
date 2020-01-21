@@ -37,6 +37,8 @@ func (p *PlayPlayer) PerflopAction(PotChip int64) (potChip int64) {
 			fmt.Println(p[0].Name, p[0].Chip)
 			fmt.Println(p[1].Name, p[1].Chip)
 			//debug0121---
+			//展示下一轮的牌
+			fmt.Println("FLOP:", p[0].CardInfo.Value7[2].CardTranslate(), p[0].CardInfo.Value7[3].CardTranslate(), p[0].CardInfo.Value7[4].CardTranslate())
 			PotChip = p.FlopAction(PotChip)
 			return PotChip
 		}
